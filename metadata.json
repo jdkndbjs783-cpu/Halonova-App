@@ -1,0 +1,6 @@
+{
+  "name": "Hello Nova",
+  "description": "A futuristic dark cyber console terminal with profile setup, modular control cards, local Room DB persistence, bottom navigation, and a dynamic engine control.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
