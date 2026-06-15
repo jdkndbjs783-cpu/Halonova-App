@@ -11,9 +11,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -48,7 +46,7 @@ class MainActivity : ComponentActivity() {
             val preferences by viewModel.preferences.collectAsState()
 
             // Connect dynamic theme selector to user choice stored in persistent Room sector
-            MyApplicationTheme(darkTheme = preferences.darkThemeEnabled) {
+            MyApplicationTheme(themeMode = preferences.themeMode) {
                 val navController = rememberNavController()
 
                 NavHost(
@@ -101,14 +99,16 @@ fun MainContainer(
     onSignOutPressed: () -> Unit
 ) {
     var activeTab by remember { mutableStateOf("home") }
+    val isVoiceSessionActive by viewModel.isVoiceSessionActive.collectAsState()
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "HELLO NOVA CORE // v1.07",
+                        text = "HELLO NOVA CORE // ONLINE",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Monospace,
@@ -137,45 +137,75 @@ fun MainContainer(
                         selected = activeTab == "home",
                         onClick = { activeTab = "home" },
                         icon = { Icon(Icons.Default.Home, contentDescription = "Home tab", modifier = Modifier.size(24.dp)) },
-                        label = { Text("Home", fontFamily = FontFamily.Monospace, fontSize = 11.sp, fontWeight = FontWeight.Bold) },
+                        label = { Text("Home", fontFamily = FontFamily.Monospace, fontSize = 9.sp, fontWeight = FontWeight.Bold) },
                         colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = com.example.ui.theme.CyberNeonCyan,
-                            selectedTextColor = com.example.ui.theme.CyberNeonCyan,
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
                             unselectedIconColor = Color.White.copy(alpha = 0.4f),
                             unselectedTextColor = Color.White.copy(alpha = 0.4f),
-                            indicatorColor = com.example.ui.theme.CyberNeonCyan.copy(alpha = 0.2f)
+                            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
                         ),
                         modifier = Modifier.testTag("nav_home_tab")
+                    )
+
+                    NavigationBarItem(
+                        selected = activeTab == "voice",
+                        onClick = { activeTab = "voice" },
+                        icon = { Icon(Icons.Default.Mic, contentDescription = "Voice tab", modifier = Modifier.size(24.dp)) },
+                        label = { Text("Voice", fontFamily = FontFamily.Monospace, fontSize = 9.sp, fontWeight = FontWeight.Bold) },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            unselectedIconColor = Color.White.copy(alpha = 0.4f),
+                            unselectedTextColor = Color.White.copy(alpha = 0.4f),
+                            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                        ),
+                        modifier = Modifier.testTag("nav_voice_tab")
+                    )
+
+                    NavigationBarItem(
+                        selected = activeTab == "memory",
+                        onClick = { activeTab = "memory" },
+                        icon = { Icon(Icons.Default.Star, contentDescription = "Memory tab", modifier = Modifier.size(24.dp)) },
+                        label = { Text("Memory", fontFamily = FontFamily.Monospace, fontSize = 9.sp, fontWeight = FontWeight.Bold) },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            unselectedIconColor = Color.White.copy(alpha = 0.4f),
+                            unselectedTextColor = Color.White.copy(alpha = 0.4f),
+                            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                        ),
+                        modifier = Modifier.testTag("nav_memory_tab")
+                    )
+
+                    NavigationBarItem(
+                        selected = activeTab == "companion",
+                        onClick = { activeTab = "companion" },
+                        icon = { Icon(Icons.Default.Face, contentDescription = "Companion tab", modifier = Modifier.size(24.dp)) },
+                        label = { Text("Companion", fontFamily = FontFamily.Monospace, fontSize = 9.sp, fontWeight = FontWeight.Bold) },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            unselectedIconColor = Color.White.copy(alpha = 0.4f),
+                            unselectedTextColor = Color.White.copy(alpha = 0.4f),
+                            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                        ),
+                        modifier = Modifier.testTag("nav_companion_tab")
                     )
 
                     NavigationBarItem(
                         selected = activeTab == "settings",
                         onClick = { activeTab = "settings" },
                         icon = { Icon(Icons.Default.Settings, contentDescription = "Settings tab", modifier = Modifier.size(24.dp)) },
-                        label = { Text("Settings", fontFamily = FontFamily.Monospace, fontSize = 11.sp, fontWeight = FontWeight.Bold) },
+                        label = { Text("Settings", fontFamily = FontFamily.Monospace, fontSize = 9.sp, fontWeight = FontWeight.Bold) },
                         colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = com.example.ui.theme.CyberNeonCyan,
-                            selectedTextColor = com.example.ui.theme.CyberNeonCyan,
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
                             unselectedIconColor = Color.White.copy(alpha = 0.4f),
                             unselectedTextColor = Color.White.copy(alpha = 0.4f),
-                            indicatorColor = com.example.ui.theme.CyberNeonCyan.copy(alpha = 0.2f)
+                            indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
                         ),
                         modifier = Modifier.testTag("nav_settings_tab")
-                    )
-
-                    NavigationBarItem(
-                        selected = activeTab == "profile",
-                        onClick = { activeTab = "profile" },
-                        icon = { Icon(Icons.Default.Person, contentDescription = "Profile tab", modifier = Modifier.size(24.dp)) },
-                        label = { Text("Profile", fontFamily = FontFamily.Monospace, fontSize = 11.sp, fontWeight = FontWeight.Bold) },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = com.example.ui.theme.CyberNeonCyan,
-                            selectedTextColor = com.example.ui.theme.CyberNeonCyan,
-                            unselectedIconColor = Color.White.copy(alpha = 0.4f),
-                            unselectedTextColor = Color.White.copy(alpha = 0.4f),
-                            indicatorColor = com.example.ui.theme.CyberNeonCyan.copy(alpha = 0.2f)
-                        ),
-                        modifier = Modifier.testTag("nav_profile_tab")
                     )
                 }
             }
@@ -190,14 +220,23 @@ fun MainContainer(
             when (tab) {
                 "home" -> DashboardScreen(
                     viewModel = viewModel, 
-                    onNavigateToPermissions = { activeTab = "permissions" },
+                    onNavigateToPermissions = { activeTab = "security" },
                     onNavigateToCompanion = { activeTab = "companion" }
                 )
-                "settings" -> SettingsScreen(viewModel = viewModel)
-                "profile" -> ProfileScreen(viewModel = viewModel, onLogoutPressed = onSignOutPressed)
-                "permissions" -> PermissionCenterScreen(viewModel = viewModel, onBack = { activeTab = "home" })
+                "voice" -> VoiceScreen(viewModel = viewModel)
+                "memory" -> MemoryScreen(viewModel = viewModel)
                 "companion" -> CompanionCenterScreen(viewModel = viewModel, onBack = { activeTab = "home" })
+                "security" -> PermissionCenterScreen(viewModel = viewModel, isTabMode = false)
+                "settings" -> SettingsScreen(viewModel = viewModel)
             }
         }
     }
+
+    if (isVoiceSessionActive) {
+        SiriLiveOverlay(
+            viewModel = viewModel,
+            onDismiss = {}
+        )
+    }
+}
 }

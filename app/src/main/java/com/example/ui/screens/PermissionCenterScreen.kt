@@ -34,7 +34,8 @@ import com.example.viewmodel.MainViewModel
 @Composable
 fun PermissionCenterScreen(
     viewModel: MainViewModel,
-    onBack: () -> Unit,
+    isTabMode: Boolean = true,
+    onBack: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val report by viewModel.securityReport.collectAsState()
@@ -60,15 +61,17 @@ fun PermissionCenterScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(
-                        onClick = onBack,
-                        modifier = Modifier.testTag("perm_center_back_button")
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                    if (!isTabMode) {
+                        IconButton(
+                            onClick = onBack,
+                            modifier = Modifier.testTag("perm_center_back_button")
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
                 },
                 actions = {
@@ -183,6 +186,48 @@ fun PermissionCenterScreen(
                                 fontFamily = FontFamily.Monospace
                             )
                         }
+                    }
+                }
+            }
+
+            // 1.5 One Tap Fix Button
+            if (report.missingPermissionsCount > 0) {
+                item {
+                    Button(
+                        onClick = {
+                            if (!report.microphoneGranted) viewModel.triggerPermissionRecovery("MICROPHONE")
+                            else if (!report.cameraGranted) viewModel.triggerPermissionRecovery("CAMERA")
+                            else if (!report.notificationsGranted) viewModel.triggerPermissionRecovery("NOTIFICATIONS")
+                            else if (!report.contactsGranted) viewModel.triggerPermissionRecovery("CONTACTS")
+                            else if (!report.phoneGranted) viewModel.triggerPermissionRecovery("PHONE")
+                            else if (!report.smsGranted) viewModel.triggerPermissionRecovery("SMS")
+                            else if (!report.overlayGranted) viewModel.triggerPermissionRecovery("OVERLAY")
+                            else if (!report.accessibilityEnabled) viewModel.triggerPermissionRecovery("ACCESSIBILITY")
+                            else if (!report.bluetoothGranted) viewModel.triggerPermissionRecovery("BLUETOOTH")
+                            else if (!report.batteryOptimizationsUnrestricted) viewModel.triggerPermissionRecovery("BATTERY")
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .testTag("one_tap_fix_btn"),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = CyberNeonCyan,
+                            contentColor = Color.Black
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Build,
+                            contentDescription = "One Tap Fix",
+                            tint = Color.Black
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "ONE TAP SECURITY RECOVERY (${report.missingPermissionsCount} ISSUES)",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.Monospace
+                        )
                     }
                 }
             }

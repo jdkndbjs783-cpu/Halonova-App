@@ -22,6 +22,36 @@ private val CyberDarkColorScheme = darkColorScheme(
     outline = CyberNeonCyan
 )
 
+private val DarkSlateColorScheme = darkColorScheme(
+    primary = Color(0xFF38BDF8),
+    onPrimary = Color.Black,
+    secondary = Color(0xFF94A3B8),
+    onSecondary = Color.White,
+    tertiary = Color(0xFF10B981),
+    background = Color(0xFF0F172A),
+    onBackground = Color(0xFFF1F5F9),
+    surface = Color(0xFF1E293B),
+    onSurface = Color(0xFFF1F5F9),
+    surfaceVariant = Color(0xFF334155),
+    onSurfaceVariant = Color(0xFF94A3B8),
+    outline = Color(0xFF475569)
+)
+
+private val CyberPinkColorScheme = darkColorScheme(
+    primary = CyberNeonMagenta,
+    onPrimary = Color.White,
+    secondary = CyberNeonCyan,
+    onSecondary = Color.Black,
+    tertiary = CyberNeonGreen,
+    background = CyberDarkBg,
+    onBackground = TextPrimaryDark,
+    surface = CyberDarkCard,
+    onSurface = TextPrimaryDark,
+    surfaceVariant = Color(0xFF3E1335),
+    onSurfaceVariant = TextSecondaryDark,
+    outline = CyberNeonMagenta
+)
+
 private val CyberLightColorScheme = lightColorScheme(
     primary = CyberLightPrimary,
     onPrimary = Color.White,
@@ -39,13 +69,13 @@ private val CyberLightColorScheme = lightColorScheme(
 
 @Composable
 fun MyApplicationTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    themeMode: String = "cyber",
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) {
-        CyberDarkColorScheme
-    } else {
-        CyberLightColorScheme
+    val colorScheme = when (themeMode) {
+        "dark" -> DarkSlateColorScheme
+        "cyber_pink" -> CyberPinkColorScheme
+        else -> CyberDarkColorScheme
     }
 
     MaterialTheme(

@@ -44,9 +44,10 @@ class AutoLearningEngine(
     /**
      * Seeds initial user action logs to show learning system in action on fresh install
      */
-    private suspend fun seedMockHistoryIfEmpty() = withContext(Dispatchers.IO) {
-        try {
-            val launches = repository.allLaunchHistoryFlow.first()
+    private suspend fun seedMockHistoryIfEmpty() {
+        withContext(Dispatchers.IO) {
+            try {
+                val launches = repository.allLaunchHistoryFlow.first()
             // We'll peek if there are any launches
             val memories = repository.getAllCategorizedMemories()
             if (memories.isEmpty()) {
@@ -100,8 +101,11 @@ class AutoLearningEngine(
                     )
                 )
             }
-        } catch (e: Exception) {
-            Log.e("AutoLearningEngine", "Error seeding mock history: ${e.message}")
+                Log.d("AutoLearningEngine", "Mock history seeding completed or not needed")
+            } catch (e: Exception) {
+                Log.e("AutoLearningEngine", "Error seeding mock history: ${e.message}")
+            }
+            Unit
         }
     }
 

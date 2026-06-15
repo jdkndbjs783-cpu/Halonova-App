@@ -712,7 +712,7 @@ fun SettingsScreen(
                         )
                     }
 
-                    // Theme Selection Switch
+                    // Theme Selection Block with 3 choice states
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
@@ -720,26 +720,53 @@ fun SettingsScreen(
                     ) {
                         Column(modifier = Modifier.weight(1.0f)) {
                             Text(
-                                text = "Deep Cosmic Theme",
+                                text = "System Color Theme",
                                 fontSize = 13.sp,
                                 color = Color.White,
                                 fontFamily = FontFamily.Monospace
                             )
                             Text(
-                                text = "Aesthetic deep space colors (#0A0E29)",
+                                text = "Select active design layout paradigm",
                                 fontSize = 10.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        Switch(
-                            checked = darkThemeChecked,
-                            onCheckedChange = { darkThemeChecked = it },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = CyberNeonCyan,
-                                checkedTrackColor = CyberNeonCyan.copy(alpha = 0.4f)
-                            ),
-                            modifier = Modifier.testTag("settings_theme_switch")
-                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(38.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        val themeSelections = listOf("dark" to "Slate Dark", "cyber" to "Cyber Blue", "cyber_pink" to "Cyber Pink")
+                        themeSelections.forEach { (mode, label) ->
+                            val isSel = themeModeInput == mode
+                            val borderCol = if (isSel) CyberNeonCyan else CyberDarkCardBorder
+                            val bgCol = if (isSel) CyberNeonCyan.copy(alpha = 0.15f) else Color.Transparent
+                            val txtCol = if (isSel) CyberNeonCyan else Color.Gray
+
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxHeight()
+                                    .background(bgCol, RoundedCornerShape(8.dp))
+                                    .border(1.dp, borderCol, RoundedCornerShape(8.dp))
+                                    .clickable { 
+                                        themeModeInput = mode
+                                        darkThemeChecked = (mode != "light")
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = label.uppercase(),
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = FontFamily.Monospace,
+                                    color = txtCol
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -783,7 +810,7 @@ fun SettingsScreen(
                         speechSpeed = speechSpeedInput,
                         speechPitch = speechPitchInput,
                         speechVolume = speechVolumeInput,
-                        themeMode = if (darkThemeChecked) "cyber" else "light",
+                        themeMode = themeModeInput,
                         startupEngineEnabled = startupEngineChecked,
                         notificationReadbackEnabled = notificationReadbackChecked,
                         voiceFeedbackEnabled = voiceFeedbackChecked,
@@ -805,6 +832,30 @@ fun SettingsScreen(
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.Monospace,
                     color = Color.Black,
+                    fontSize = 12.sp
+                )
+            }
+        }
+
+        // DECOUPLE OPERATOR // LOGOUT BUTTON
+        item {
+            Button(
+                onClick = {
+                    viewModel.performLogout()
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = CyberNeonMagenta.copy(alpha = 0.2f), contentColor = CyberNeonMagenta),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .border(1.dp, CyberNeonMagenta, RoundedCornerShape(12.dp))
+                    .testTag("settings_logout_button"),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(
+                    text = "DECOUPLE OPERATOR // LOGOUT",
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Monospace,
+                    color = CyberNeonMagenta,
                     fontSize = 12.sp
                 )
             }
